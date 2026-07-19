@@ -7,7 +7,7 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
-import { ZoneStatus, StaffRole, StadiumZone, GateInfo, StaffTask, EmergencyAlert, SustainabilityMetric } from "./src/types.js";
+import { ZoneStatus, StaffRole, StadiumZone, GateInfo, StaffTask, EmergencyAlert, SustainabilityMetric } from "./src/types";
 
 dotenv.config();
 
