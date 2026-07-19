@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-bg: #050816;
+  --color-secondary-bg: #0B1228;
+  --color-card-bg: rgba(18, 25, 50, 0.75);
+  --color-border-glass: rgba(255, 255, 255, 0.08);
+  
+  --color-fifa-blue: #005CFF;
+  --color-fifa-purple: #6C4DFF;
+  --color-ai-cyan: #00D4FF;
+  --color-success-green: #00C853;
+  --color-warn-gold: #FFC107;
+  --color-crit-red: #FF3B5C;
+  --color-gold-accent: #FFD54F;
+  
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Outfit", "Space Grotesk", sans-serif;
+  
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin-slow 12s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-aurora: aurora 20s linear infinite;
+  --animate-shimmer: shimmer 2.5s infinite;
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.6;
+      filter: drop-shadow(0 0 4px var(--color-fifa-blue)) blur(1px);
+    }
+    50% {
+      opacity: 1;
+      filter: drop-shadow(0 0 15px var(--color-fifa-purple)) blur(0px);
+    }
+  }
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(2deg);
+    }
+  }
+  @keyframes aurora {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+/* Glassmorphism utility classes */
+.glass-panel {
+  background: rgba(11, 18, 40, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  border-radius: 24px;
+}
+
+.glass-panel-glow {
+  background: rgba(18, 25, 50, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 92, 255, 0.1);
+  border-radius: 24px;
+}
+
+/* Custom premium hover effect */
+.premium-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.premium-card-hover:hover {
+  transform: translateY(-6px);
+  border-color: rgba(0, 212, 255, 0.3);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 212, 255, 0.15);
+}
+
+/* Animated Pitch lines overlay */
+.pitch-lines-overlay {
+  background-image: 
+    radial-gradient(circle at 50% 50%, transparent 120px, rgba(255, 255, 255, 0.02) 121px, rgba(255, 255, 255, 0.02) 122px, transparent 123px),
+    linear-gradient(to right, transparent 49.8%, rgba(255, 255, 255, 0.02) 49.9%, rgba(255, 255, 255, 0.02) 50.1%, transparent 50.2%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px;
+}
+
+/* Glowing text effects */
+.glow-text-ai {
+  text-shadow: 0 0 10px rgba(0, 214, 255, 0.5), 0 0 2px rgba(0, 214, 255, 0.8);
+}
+
+.glow-text-fifa {
+  text-shadow: 0 0 15px rgba(108, 77, 255, 0.6), 0 0 2px rgba(0, 92, 255, 0.8);
+}
+
+/* Pulse animation helper for emergency map/alerts */
+.pulse-ring {
+  box-shadow: 0 0 0 0 rgba(255, 59, 92, 0.7);
+  animation: pulse-ring-anim 1.5s cubic-bezier(0.24, 0, 0, 1) infinite;
+}
+
+@keyframes pulse-ring-anim {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 59, 92, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 59, 92, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 59, 92, 0);
+  }
+}
+
+.pulse-ring-amber {
+  box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+  animation: pulse-ring-amber-anim 1.5s cubic-bezier(0.24, 0, 0, 1) infinite;
+}
+
+@keyframes pulse-ring-amber-anim {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 193, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+  }
+}
+
+.pulse-ring-emerald {
+  box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+  animation: pulse-ring-emerald-anim 1.5s cubic-bezier(0.24, 0, 0, 1) infinite;
+}
+
+@keyframes pulse-ring-emerald-anim {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(0, 200, 83, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+  }
+}
+
+/* Wave dynamic animation for bars */
+.bar-chart-glow {
+  filter: drop-shadow(0 0 8px rgba(108, 77, 255, 0.3));
+}

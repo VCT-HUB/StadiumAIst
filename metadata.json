@@ -1,0 +1,6 @@
+{
+  "name": "StadiumAIst",
+  "description": "An AI-powered stadium assistant that helps fans, organizers, volunteers, and venue staff with crowd intelligence, real-time navigation, multilingual assistance, and operational decision support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
