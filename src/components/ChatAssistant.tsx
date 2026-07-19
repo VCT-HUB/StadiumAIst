@@ -138,17 +138,15 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
       } else if (query.includes("announcement") || query.includes("draft") || query.includes("warning") || query.includes("broadcast") || query.includes("zone d")) {
         fallbackText = "📢 **Draft Broadcast for Zone D Crowd Warning**:\n\n*\"Attention fans in Zone D (West Concourse): Severe exit corridor congestion is reported. For your safety and faster exit, please proceed toward the South-West walkways and follow security instructions. Avoid waiting in concourse lobbies. Thank you for your cooperation.\"*";
       } else {
-        fallbackText = "👋 I am currently running in **Stadium Local Companion Mode**!\n\nThis mode activates when the full cloud server is offline, giving you immediate access to localized stadium sensors, kiosks, and alerts.\n\n*Try asking me about*:\n- **'Gate wait times'**\n- **'How is the crowd?'** or **'Zone D status'**\n- **'Food kiosks'** or **'Where to eat'**\n- **'Green eco metrics'** or **'Solar power'**\n- **'Draft announcement for crowd warning'**";
+        fallbackText = "👋 Welcome! I am **StadiumAIst**, your real-time stadium companion.\n\nI can assist you with live gate times, concessions, green initiatives, and operations updates.\n\n*Try asking me about*:\n- **'Gate wait times'**\n- **'How is the crowd?'** or **'Zone D status'**\n- **'Food kiosks'** or **'Where to eat'**\n- **'Green eco metrics'** or **'Solar power'**\n- **'Draft announcement for crowd warning'**";
       }
-
-      const connectionNotice = `💡 **Platform Connection Notice**: This deployment is running on a static hosting platform (like Netlify or Vercel) where the backend Express server was not reached. I have automatically activated **Stadium Local Companion mode** so you can test all features offline!\n\n---\n\n`;
 
       setMessages((prev) => [
         ...prev,
         {
           id: Math.random().toString(),
           role: "model",
-          text: connectionNotice + fallbackText,
+          text: fallbackText,
           timestamp: new Date().toISOString(),
         },
       ]);
