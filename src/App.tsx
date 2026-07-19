@@ -33,18 +33,50 @@ import {
   Compass
 } from "lucide-react";
 
+const INITIAL_ZONES: StadiumZone[] = [
+  { id: "A", name: "Zone A (North Gate / Fan Zone)", capacity: 15000, currentCrowd: 6500, status: ZoneStatus.NORMAL, gateQueueTime: 8, concessionQueueTime: 12, restroomQueueTime: 5, sustainabilityScore: 88 },
+  { id: "B", name: "Zone B (East Concourse / Rest Area)", capacity: 18000, currentCrowd: 16500, status: ZoneStatus.CROWDED, gateQueueTime: 22, concessionQueueTime: 25, restroomQueueTime: 15, sustainabilityScore: 74 },
+  { id: "C", name: "Zone C (South Gate / Hospitality)", capacity: 15000, currentCrowd: 14200, status: ZoneStatus.CROWDED, gateQueueTime: 18, concessionQueueTime: 18, restroomQueueTime: 10, sustainabilityScore: 82 },
+  { id: "D", name: "Zone D (West Concourse / Media Box)", capacity: 12000, currentCrowd: 11800, status: ZoneStatus.CRITICAL, gateQueueTime: 35, concessionQueueTime: 30, restroomQueueTime: 22, sustainabilityScore: 68 },
+];
+
+const INITIAL_GATES: GateInfo[] = [
+  { id: "G1", name: "North Gate (Gate 1)", status: "OPEN", flowRate: 85, avgWaitTime: 8 },
+  { id: "G2", name: "East Gate (Gate 2)", status: "SLOW", flowRate: 40, avgWaitTime: 22 },
+  { id: "G3", name: "South Gate (Gate 3)", status: "OPEN", flowRate: 70, avgWaitTime: 18 },
+  { id: "G4", name: "West Gate (Gate 4)", status: "CLOSED", flowRate: 0, avgWaitTime: 0 },
+];
+
+const INITIAL_TASKS: StaffTask[] = [
+  { id: "T1", title: "Redirect Traffic from East Gate", description: "Direct arriving fans from Gate 2 (East) toward Gate 1 (North) to ease the current 22-min bottle-neck.", location: "East Gate concourse", assignedRole: StaffRole.VOLUNTEER, status: "IN_PROGRESS", priority: "HIGH", timestamp: new Date(Date.now() - 30 * 60000).toISOString() },
+  { id: "T2", title: "Clean Up Spill at Zone D Restroom", description: "Slippery hazard reported. Please clean up immediately and put up safety caution sign.", location: "Zone D Concourse Section 104", assignedRole: StaffRole.VOLUNTEER, status: "PENDING", priority: "MEDIUM", timestamp: new Date(Date.now() - 15 * 60000).toISOString() },
+  { id: "T3", title: "Crowd Control at West Concourse", description: "West Gate is closed. Help direct fans exiting seats toward south-west paths.", location: "Zone D Exit Paths", assignedRole: StaffRole.SECURITY, status: "PENDING", priority: "CRITICAL", timestamp: new Date(Date.now() - 5 * 60000).toISOString() },
+];
+
+const INITIAL_ALERTS: EmergencyAlert[] = [
+  { id: "E1", title: "West Concourse Congestion", description: "West Gate closure has created excessive crowd accumulation in Zone D exit corridor.", location: "Zone D Corridor", severity: "CRITICAL", timestamp: new Date(Date.now() - 10 * 60000).toISOString(), resolved: false },
+  { id: "E2", title: "Lost Child Assisted", description: "A 7-year-old child wearing a red FIFA cap was found near the North Gate medical tent. Handled by Section A security.", location: "Zone A Medical Tent", severity: "INFO", timestamp: new Date(Date.now() - 40 * 60000).toISOString(), resolved: true },
+];
+
+const INITIAL_METRICS: SustainabilityMetric[] = [
+  { category: "Solar Power Generation", value: 450, target: 500, unit: "kWh", status: "ON_TRACK" },
+  { category: "Waste Diverted from Landfill", value: 85, target: 90, unit: "%", status: "EXCELLENT" },
+  { category: "Recycled Water Consumption", value: 120, target: 150, unit: "kL", status: "NEEDS_IMPROVEMENT" },
+  { category: "Biodegradable Packaging Use", value: 98, target: 95, unit: "%", status: "EXCELLENT" },
+];
+
 export default function App() {
   // Application roles and profile selections
   const [currentRole, setCurrentRole] = useState<StaffRole>(StaffRole.ORGANIZER);
   
-  // Server-synced state
-  const [zones, setZones] = useState<StadiumZone[]>([]);
-  const [gates, setGates] = useState<GateInfo[]>([]);
-  const [tasks, setTasks] = useState<StaffTask[]>([]);
-  const [alerts, setAlerts] = useState<EmergencyAlert[]>([]);
-  const [metrics, setMetrics] = useState<SustainabilityMetric[]>([]);
+  // Server-synced state - initialized with gorgeous rich sensor data for robust static deploys (Netlify/Vercel)
+  const [zones, setZones] = useState<StadiumZone[]>(INITIAL_ZONES);
+  const [gates, setGates] = useState<GateInfo[]>(INITIAL_GATES);
+  const [tasks, setTasks] = useState<StaffTask[]>(INITIAL_TASKS);
+  const [alerts, setAlerts] = useState<EmergencyAlert[]>(INITIAL_ALERTS);
+  const [metrics, setMetrics] = useState<SustainabilityMetric[]>(INITIAL_METRICS);
   
-  const [selectedZone, setSelectedZone] = useState<StadiumZone | null>(null);
+  const [selectedZone, setSelectedZone] = useState<StadiumZone | null>(INITIAL_ZONES[0]);
   const [isSyncing, setIsSyncing] = useState(false);
 
   // Live calculated metrics for the high-end dashboard HUD
@@ -96,7 +128,8 @@ export default function App() {
         setSelectedZone(zonesData[0]);
       }
     } catch (err) {
-      console.error("Failed to sync live telemetry with Express server", err);
+      console.warn("Failed to sync live telemetry with Express server. Running in Stadium Local Companion mode.", err);
+      // In static deployment, keep using local in-memory simulated updates
     } finally {
       setIsSyncing(false);
     }
@@ -109,9 +142,27 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Sync server handlers (POST requests that keep state completely consistent)
+  // Sync server handlers (POST requests that keep state completely consistent with local companion fallbacks)
   
   const handleUpdateCrowd = async (zoneId: string, newCrowd: number) => {
+    // Optimistic / Local fallback update first, ensuring instantly responsive and operational static builds
+    setZones((prev) => prev.map((z) => {
+      if (z.id === zoneId) {
+        const capacity = z.capacity;
+        const currentCrowd = Math.max(0, Math.min(capacity, newCrowd));
+        const occupancy = currentCrowd / capacity;
+        let status = ZoneStatus.NORMAL;
+        if (occupancy > 0.9) status = ZoneStatus.CRITICAL;
+        else if (occupancy > 0.7) status = ZoneStatus.CROWDED;
+        const updated = { ...z, currentCrowd, status };
+        if (selectedZone && selectedZone.id === zoneId) {
+          setSelectedZone(updated);
+        }
+        return updated;
+      }
+      return z;
+    }));
+
     try {
       const res = await fetch(`/api/stadium/zones/${zoneId}/crowd`, {
         method: "POST",
@@ -120,14 +171,13 @@ export default function App() {
       });
       if (res.ok) {
         const data = await res.json();
-        // Update local state instantly for lightning performance
         setZones((prev) => prev.map((z) => (z.id === zoneId ? data.updatedZone : z)));
         if (selectedZone && selectedZone.id === zoneId) {
           setSelectedZone(data.updatedZone);
         }
       }
     } catch (err) {
-      console.error("Error simulating crowd update", err);
+      console.warn("Express server offline. Local crowd simulation applied.", err);
     }
   };
 
@@ -138,6 +188,21 @@ export default function App() {
     assignedRole: StaffRole.VOLUNTEER | StaffRole.SECURITY,
     priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
   ) => {
+    const fallbackId = `T-${Date.now()}`;
+    const newTask: StaffTask = {
+      id: fallbackId,
+      title,
+      description,
+      location,
+      assignedRole,
+      status: "PENDING",
+      priority,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Prepend to local state instantly
+    setTasks((prev) => [newTask, ...prev]);
+
     try {
       const res = await fetch("/api/stadium/tasks", {
         method: "POST",
@@ -145,14 +210,18 @@ export default function App() {
         body: JSON.stringify({ title, description, location, assignedRole, priority }),
       });
       if (res.ok) {
-        fetchStadiumState();
+        const data = await res.json();
+        setTasks((prev) => prev.map((t) => t.id === fallbackId ? data.task : t));
       }
     } catch (err) {
-      console.error("Error creating dispatch ticket", err);
+      console.warn("Express server offline. Dispatch ticket registered in-memory.", err);
     }
   };
 
   const handleUpdateTaskStatus = async (taskId: string, newStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED") => {
+    // Update local state instantly
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
+
     try {
       const res = await fetch(`/api/stadium/tasks/${taskId}/status`, {
         method: "POST",
@@ -160,14 +229,28 @@ export default function App() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        fetchStadiumState();
+        const data = await res.json();
+        setTasks((prev) => prev.map((t) => (t.id === taskId ? data.task : t)));
       }
     } catch (err) {
-      console.error("Error claiming/resolving task", err);
+      console.warn("Express server offline. Task status claimed/resolved in local session.", err);
     }
   };
 
   const handleTriggerAlert = async (title: string, description: string, location: string, severity: "INFO" | "WARNING" | "CRITICAL") => {
+    const fallbackId = `E-${Date.now()}`;
+    const newAlert: EmergencyAlert = {
+      id: fallbackId,
+      title,
+      description,
+      location,
+      severity,
+      timestamp: new Date().toISOString(),
+      resolved: false,
+    };
+
+    setAlerts((prev) => [newAlert, ...prev]);
+
     try {
       const res = await fetch("/api/stadium/alerts", {
         method: "POST",
@@ -175,28 +258,34 @@ export default function App() {
         body: JSON.stringify({ title, description, location, severity }),
       });
       if (res.ok) {
-        fetchStadiumState();
+        const data = await res.json();
+        setAlerts((prev) => prev.map((a) => a.id === fallbackId ? data.alert : a));
       }
     } catch (err) {
-      console.error("Error broadcasting alert", err);
+      console.warn("Express server offline. Tactical alert logged locally.", err);
     }
   };
 
   const handleResolveAlert = async (alertId: string) => {
+    setAlerts((prev) => prev.map((a) => (a.id === alertId ? { ...a, resolved: true } : a)));
+
     try {
       const res = await fetch(`/api/stadium/alerts/${alertId}/resolve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
       if (res.ok) {
-        fetchStadiumState();
+        const data = await res.json();
+        setAlerts((prev) => prev.map((a) => (a.id === alertId ? data.alert : a)));
       }
     } catch (err) {
-      console.error("Error resolving alert", err);
+      console.warn("Express server offline. Tactical alert resolved locally.", err);
     }
   };
 
   const handleUpdateGateStatus = async (gateId: string, status: "OPEN" | "CLOSED" | "SLOW", waitTime: number, flowRate: number) => {
+    setGates((prev) => prev.map((g) => (g.id === gateId ? { ...g, status, avgWaitTime: waitTime, flowRate } : g)));
+
     try {
       const res = await fetch(`/api/stadium/gates/${gateId}`, {
         method: "POST",
@@ -207,11 +296,22 @@ export default function App() {
         fetchStadiumState();
       }
     } catch (err) {
-      console.error("Error updating gate configuration", err);
+      console.warn("Express server offline. Access Gate configuration updated locally.", err);
     }
   };
 
   const handleUpdateMetric = async (category: string, newValue: number) => {
+    setMetrics((prev) => prev.map((m) => {
+      if (m.category === category) {
+        const progress = newValue / m.target;
+        let status: "EXCELLENT" | "ON_TRACK" | "NEEDS_IMPROVEMENT" = "NEEDS_IMPROVEMENT";
+        if (progress >= 0.95) status = "EXCELLENT";
+        else if (progress >= 0.8) status = "ON_TRACK";
+        return { ...m, value: newValue, status };
+      }
+      return m;
+    }));
+
     try {
       const res = await fetch("/api/stadium/sustainability", {
         method: "POST",
@@ -222,7 +322,7 @@ export default function App() {
         fetchStadiumState();
       }
     } catch (err) {
-      console.error("Error logging green action", err);
+      console.warn("Express server offline. Sustainability telemetry updated locally.", err);
     }
   };
 

@@ -116,12 +116,39 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
         throw new Error(data.error || "Failed to call assistant API.");
       }
     } catch (err: any) {
+      console.warn("Express backend API offline. Activating Stadium Local Companion mode fallback.", err);
+      
+      const query = text.toLowerCase();
+      let fallbackText = "";
+
+      if (query.includes("concession") || query.includes("food") || query.includes("eat") || query.includes("drink") || query.includes("beer") || query.includes("kiosk") || query.includes("hungry") || query.includes("restaurant")) {
+        fallbackText = "🍔 **Stadium Food & Concessions Guide**:\n\n- **Zone A (North)**: Quick-bites, popcorn, soda, and hot dogs. (Wait line: ~12 min)\n- **Zone B (East)**: World Cup Official Souvenirs & Snack Station. (Wait line: ~25 min)\n- **Zone C (South)**: Premium VIP Hospitality Lounges & international buffet kiosks. (Wait line: ~18 min)\n- **Zone D (West)**: Mega Food Court with local food trucks and soft drinks. (Wait line: ~30 min)";
+      } else if (query.includes("queue") || query.includes("wait") || query.includes("delay") || query.includes("line") || query.includes("time") || query.includes("slow")) {
+        fallbackText = "⏱️ **Current Live Wait Times (Local Sensors)**:\n\n- **Zone A (North)**: Gates: 8m | Food: 12m | Restrooms: 5m\n- **Zone B (East)**: Gates: 22m | Food: 25m | Restrooms: 15m\n- **Zone C (South)**: Gates: 18m | Food: 18m | Restrooms: 10m\n- **Zone D (West)**: Gates: 35m | Food: 30m | Restrooms: 22m\n\n*Pro-tip:* Head over to Zone A (North Gate) or Zone C (South Gate) to bypass crowd bottlenecks!";
+      } else if (query.includes("gate") || query.includes("open") || query.includes("close") || query.includes("g1") || query.includes("g2") || query.includes("g3") || query.includes("g4") || query.includes("entrance") || query.includes("exit")) {
+        fallbackText = "🚧 **Stadium Gates & Access Control Status**:\n\n- **Gate 1 (North)**: 🟢 **OPEN** (Flow rate: 85 fans/min, Average wait: 8 min)\n- **Gate 2 (East)**: 🟡 **SLOW** (Flow rate: 40 fans/min, Average wait: 22 min due to scanner upgrade)\n- **Gate 3 (South)**: 🟢 **OPEN** (Flow rate: 70 fans/min, Average wait: 18 min)\n- **Gate 4 (West)**: 🔴 **CLOSED** (Flow rate: 0 fans/min, Wait: 0 min - Traffic diverted to South-West pathways)";
+      } else if (query.includes("eco") || query.includes("green") || query.includes("recycle") || query.includes("solar") || query.includes("sustainable") || query.includes("water") || query.includes("waste") || query.includes("carbon")) {
+        fallbackText = "🌱 **FIFA Green Stadium Sustainability Telemetry**:\n\n- **Solar Energy**: 450 kWh generated today (Target: 500 kWh - **On Track**)\n- **Waste Diverted**: 85% of plastic/cups diverted from landfill (Target: 90% - **Excellent**)\n- **Recycled Water**: 120 kL consumed for cooling/gardens (Target: 150 kL - **Needs Improvement**)\n- **Eco-Products**: 98% biodegradable food containers in-use across kiosks!";
+      } else if (query.includes("emergency") || query.includes("alert") || query.includes("security") || query.includes("hazard") || query.includes("congest") || query.includes("accident") || query.includes("fire")) {
+        fallbackText = "🚨 **Active Safety & Tactical Alerts**:\n\n- **Zone D Exit Corridor Congestion (CRITICAL)**: Gate 4 closure has created extreme foot-traffic bottleneck. Volunteer squads are dispatched to assist.\n- **Lost Child (RESOLVED)**: A 7-year-old child wearing a red FIFA cap has been reunited with family near North Gate.\n\n*Staff members are requested to consult the Operations Command HUD to claim tasks.*";
+      } else if (query.includes("crowd") || query.includes("heatmap") || query.includes("sensor") || query.includes("capacity") || query.includes("people") || query.includes("density")) {
+        fallbackText = "📊 **Stadium Crowd Occupancy & Live Capacity**:\n\n- **Zone A**: 43% full (6,500 / 15,000 capacity - **Normal**)\n- **Zone B**: 91% full (16,500 / 18,000 capacity - **Crowded**)\n- **Zone C**: 94% full (14,200 / 15,000 capacity - **Crowded**)\n- **Zone D**: 98% full (11,800 / 12,000 capacity - **Critical Congestion**)\n\n*Sensors indicate high density at the West Concourse. Please guide incoming fans away from Zone D.*";
+      } else if (query.includes("who are you") || query.includes("stadiumaist") || query.includes("assistant") || query.includes("copilot") || query.includes("help") || query.includes("introduce")) {
+        fallbackText = "Hello! I am **StadiumAIst**, your real-time FIFA Stadium operations assistant. I can help visitors find food kiosks, check gate times, track green metrics, and assist managers with staff coordination.";
+      } else if (query.includes("announcement") || query.includes("draft") || query.includes("warning") || query.includes("broadcast") || query.includes("zone d")) {
+        fallbackText = "📢 **Draft Broadcast for Zone D Crowd Warning**:\n\n*\"Attention fans in Zone D (West Concourse): Severe exit corridor congestion is reported. For your safety and faster exit, please proceed toward the South-West walkways and follow security instructions. Avoid waiting in concourse lobbies. Thank you for your cooperation.\"*";
+      } else {
+        fallbackText = "👋 I am currently running in **Stadium Local Companion Mode**!\n\nThis mode activates when the full cloud server is offline, giving you immediate access to localized stadium sensors, kiosks, and alerts.\n\n*Try asking me about*:\n- **'Gate wait times'**\n- **'How is the crowd?'** or **'Zone D status'**\n- **'Food kiosks'** or **'Where to eat'**\n- **'Green eco metrics'** or **'Solar power'**\n- **'Draft announcement for crowd warning'**";
+      }
+
+      const connectionNotice = `💡 **Platform Connection Notice**: This deployment is running on a static hosting platform (like Netlify or Vercel) where the backend Express server was not reached. I have automatically activated **Stadium Local Companion mode** so you can test all features offline!\n\n---\n\n`;
+
       setMessages((prev) => [
         ...prev,
         {
           id: Math.random().toString(),
           role: "model",
-          text: `⚠️ **API Service Offline**: ${err.message || "Could not reach StadiumAIst server. Check your Gemini API setup."}`,
+          text: connectionNotice + fallbackText,
           timestamp: new Date().toISOString(),
         },
       ]);
