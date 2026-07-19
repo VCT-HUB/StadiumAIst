@@ -75,49 +75,49 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
 
   const getMetricIcon = (category: string) => {
     if (category.toLowerCase().includes("solar") || category.toLowerCase().includes("power")) {
-      return <Sun className="w-5 h-5 text-amber-400" />;
+      return <Sun className="w-5 h-5 text-amber-500" />;
     }
     if (category.toLowerCase().includes("water")) {
-      return <Droplets className="w-5 h-5 text-[#00D4FF]" />;
+      return <Droplets className="w-5 h-5 text-emerald-600" />;
     }
     if (category.toLowerCase().includes("waste")) {
-      return <Trash2 className="w-5 h-5 text-indigo-400" />;
+      return <Trash2 className="w-5 h-5 text-indigo-500" />;
     }
-    return <Leaf className="w-5 h-5 text-[#00C853]" />;
+    return <Leaf className="w-5 h-5 text-emerald-600" />;
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "EXCELLENT":
-        return "text-[#00C853] bg-[#00C853]/10 border-[#00C853]/25 shadow-[0_0_8px_rgba(0,200,83,0.15)]";
+        return "text-emerald-700 bg-emerald-50 border-emerald-200";
       case "ON_TRACK":
-        return "text-[#005CFF] bg-[#005CFF]/10 border-[#005CFF]/25";
+        return "text-[#15803d] bg-emerald-50 border-[#22c55e]/20";
       case "NEEDS_IMPROVEMENT":
       default:
-        return "text-[#FFC107] bg-[#FFC107]/10 border-[#FFC107]/25";
+        return "text-amber-700 bg-amber-50 border-amber-200";
     }
   };
 
   return (
-    <div id="stadium-sustainability-center" className="glass-panel-glow p-6 shadow-2xl space-y-6 relative overflow-hidden">
+    <div id="stadium-sustainability-center" className="bg-white border border-[#22c55e]/20 p-6 rounded-[24px] shadow-[0_8px_30px_rgba(21,128,61,0.03)] space-y-6 relative overflow-hidden">
       
       {/* Decorative radial eco blur */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-[#00C853]/5 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-24 h-24 bg-[#15803d]/5 rounded-full blur-2xl pointer-events-none" />
 
       {/* Visual Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#22c55e]/15 pb-5">
         <div>
-          <h2 className="text-lg font-extrabold text-white flex items-center gap-2.5 font-display uppercase tracking-wider">
-            <Leaf className="w-5 h-5 text-[#00C853] animate-pulse" />
+          <h2 className="text-lg font-extrabold text-slate-800 flex items-center gap-2.5 font-display uppercase tracking-wider">
+            <Leaf className="w-5 h-5 text-[#15803d] animate-pulse" />
             FIFA Green Planet Advisor
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Monitor real-time carbon offsets, eco-friendly energy production, and interactive fan recycling targets.
           </p>
         </div>
 
         {/* Broadcast style tabs */}
-        <div className="flex items-center gap-1.5 bg-[#050816] border border-white/[0.08] p-1 rounded-full shrink-0">
+        <div className="flex items-center gap-1.5 bg-[#f0f7f4] border border-[#22c55e]/20 p-1 rounded-full shrink-0">
           {["General", "Energy", "Water", "Waste"].map((tab) => (
             <button
               key={tab}
@@ -127,8 +127,8 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
               }}
               className={`px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider cursor-pointer transition-all ${
                 activeTab === tab
-                  ? "bg-gradient-to-r from-[#00C853] to-emerald-600 text-white shadow-[0_0_10px_rgba(0,200,83,0.3)] border border-white/10"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-gradient-to-r from-[#15803d] to-[#22c55e] text-white shadow-sm border border-white/10"
+                  : "text-slate-600 hover:text-[#15803d]"
               }`}
             >
               {tab}
@@ -144,9 +144,9 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
             initial={{ opacity: 0, y: -20, x: "-50%" }}
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: -20, x: "-50%" }}
-            className="absolute top-16 left-1/2 z-50 bg-[#0B1228] border border-[#00C853] text-emerald-100 text-xs px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3"
+            className="absolute top-16 left-1/2 z-50 bg-white border border-[#22c55e] text-slate-800 text-xs px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3"
           >
-            <div className="w-6 h-6 rounded-lg bg-[#00C853]/10 flex items-center justify-center text-[#00C853]">
+            <div className="w-6 h-6 rounded-lg bg-emerald-50 flex items-center justify-center text-[#15803d]">
               <Award className="w-4 h-4" />
             </div>
             <span>Fan Achievement: <strong>{loggedAction}</strong> registered! Score boosted.</span>
@@ -159,9 +159,9 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
         {metrics.map((m) => {
           const progress = Math.min(100, Math.round((m.value / m.target) * 100));
           return (
-            <div key={m.category} className="bg-[#050816]/60 p-4 rounded-xl border border-white/[0.05] space-y-4 hover:border-white/[0.12] transition-colors premium-card-hover group">
+            <div key={m.category} className="bg-[#f0f7f4]/45 p-4 rounded-xl border border-[#22c55e]/15 space-y-4 hover:border-[#15803d]/30 transition-colors shadow-sm group">
               <div className="flex items-start justify-between">
-                <div className="p-2.5 bg-[#121932] border border-white/[0.04] rounded-xl text-[#00C853]">
+                <div className="p-2.5 bg-white border border-[#22c55e]/15 rounded-xl text-[#15803d]">
                   {getMetricIcon(m.category)}
                 </div>
                 <span className={`px-2 py-0.5 text-[9px] font-extrabold rounded-md border uppercase tracking-wider ${getStatusColor(m.status)}`}>
@@ -170,10 +170,10 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
               </div>
 
               <div>
-                <h4 className="text-xs font-bold text-slate-400 leading-snug">{m.category}</h4>
+                <h4 className="text-xs font-bold text-slate-500 leading-snug">{m.category}</h4>
                 <div className="flex items-baseline gap-1 mt-1.5">
-                  <span className="text-xl font-mono font-black text-white">{m.value.toLocaleString()}</span>
-                  <span className="text-xs text-slate-500 font-medium">
+                  <span className="text-xl font-mono font-black text-slate-800">{m.value.toLocaleString()}</span>
+                  <span className="text-xs text-slate-400 font-medium">
                     / {m.target.toLocaleString()} {m.unit}
                   </span>
                 </div>
@@ -185,10 +185,10 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
                   <span>TARGET VALUE PROGRESS</span>
                   <span>{progress}%</span>
                 </div>
-                <div className="w-full bg-[#050816] h-1.5 rounded-full overflow-hidden border border-white/[0.04]">
+                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
-                      progress >= 95 ? "bg-[#00C853]" : progress >= 80 ? "bg-[#005CFF]" : "bg-[#FFC107]"
+                      progress >= 95 ? "bg-[#15803d]" : progress >= 80 ? "bg-[#22c55e]" : "bg-amber-500"
                     }`}
                     style={{ width: `${progress}%` }}
                   />
@@ -202,51 +202,51 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
         
         {/* Left: Fan Interactive Eco Actions Panel (5 Columns) */}
-        <div className="lg:col-span-5 bg-[#050816]/80 border border-white/[0.05] p-5 rounded-2xl space-y-4">
-          <h3 className="text-xs font-black text-[#00C853] uppercase tracking-widest flex items-center gap-2 font-display">
-            <Footprints className="w-4 h-4 text-[#00C853] animate-pulse" />
+        <div className="lg:col-span-5 bg-white border border-[#22c55e]/20 p-5 rounded-2xl space-y-4 shadow-sm">
+          <h3 className="text-xs font-black text-[#15803d] uppercase tracking-widest flex items-center gap-2 font-display">
+            <Footprints className="w-4 h-4 text-[#15803d] animate-pulse" />
             Interactive Fan Sandbox
           </h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Visiting the venue today? Track your eco-friendly actions to dynamically offsets the stadium carbon footprint score on the live scoreboard.
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Visiting the venue today? Track your eco-friendly actions to dynamically offset the stadium carbon footprint score on the live scoreboard.
           </p>
 
           <div className="space-y-3">
             <button
               onClick={() => logFanAction("Solar Power Generation", 15, "Renewable Energy Saver")}
-              className="w-full bg-[#121932]/40 hover:bg-[#121932]/95 border border-white/[0.05] hover:border-[#00C853]/25 p-3.5 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all hover:scale-[1.01]"
+              className="w-full bg-[#f0f7f4]/40 hover:bg-[#f0f7f4]/80 border border-[#22c55e]/20 hover:border-[#15803d]/30 p-3.5 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all hover:scale-[1.01]"
             >
               <div>
-                <h4 className="text-xs font-bold text-white">Used Solar Charging Canopy</h4>
-                <p className="text-[10px] text-slate-400 mt-1">Plugged devices into smart kiosks at zone canopy B (+15 kWh)</p>
+                <h4 className="text-xs font-bold text-slate-800">Used Solar Charging Canopy</h4>
+                <p className="text-[10px] text-slate-500 mt-1">Plugged devices into smart kiosks at zone canopy B (+15 kWh)</p>
               </div>
-              <span className="p-2 bg-[#00C853]/10 hover:bg-[#00C853]/20 text-[#00C853] rounded-lg border border-[#00C853]/20 transition-all">
+              <span className="p-2 bg-[#15803d]/10 hover:bg-[#15803d]/20 text-[#15803d] rounded-lg border border-[#15803d]/20 transition-all">
                 <Plus className="w-4 h-4" />
               </span>
             </button>
 
             <button
               onClick={() => logFanAction("Waste Diverted from Landfill", 1, "Zero Waste Champion")}
-              className="w-full bg-[#121932]/40 hover:bg-[#121932]/95 border border-white/[0.05] hover:border-[#00C853]/25 p-3.5 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all hover:scale-[1.01]"
+              className="w-full bg-[#f0f7f4]/40 hover:bg-[#f0f7f4]/80 border border-[#22c55e]/20 hover:border-[#15803d]/30 p-3.5 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all hover:scale-[1.01]"
             >
               <div>
-                <h4 className="text-xs font-bold text-white">Biodegradable Trash Composting</h4>
-                <p className="text-[10px] text-slate-400 mt-1">Diverted biodegradable cups to composting bins (+1% Waste Diverted)</p>
+                <h4 className="text-xs font-bold text-slate-800">Biodegradable Trash Composting</h4>
+                <p className="text-[10px] text-slate-500 mt-1">Diverted biodegradable cups to composting bins (+1% Waste Diverted)</p>
               </div>
-              <span className="p-2 bg-[#00C853]/10 hover:bg-[#00C853]/20 text-[#00C853] rounded-lg border border-[#00C853]/20 transition-all">
+              <span className="p-2 bg-[#15803d]/10 hover:bg-[#15803d]/20 text-[#15803d] rounded-lg border border-[#15803d]/20 transition-all">
                 <Plus className="w-4 h-4" />
               </span>
             </button>
 
             <button
               onClick={() => logFanAction("Recycled Water Consumption", 5, "Water Ambassador")}
-              className="w-full bg-[#121932]/40 hover:bg-[#121932]/95 border border-white/[0.05] hover:border-[#00C853]/25 p-3.5 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all hover:scale-[1.01]"
+              className="w-full bg-[#f0f7f4]/40 hover:bg-[#f0f7f4]/80 border border-[#22c55e]/20 hover:border-[#15803d]/30 p-3.5 rounded-xl flex items-center justify-between text-left cursor-pointer transition-all hover:scale-[1.01]"
             >
               <div>
-                <h4 className="text-xs font-bold text-white">Smart Sensor Water Taps</h4>
-                <p className="text-[10px] text-slate-400 mt-1">Used sensor smart low-flow greywater faucets (+5 kL savings)</p>
+                <h4 className="text-xs font-bold text-slate-800">Smart Sensor Water Taps</h4>
+                <p className="text-[10px] text-slate-500 mt-1">Used sensor smart low-flow greywater faucets (+5 kL savings)</p>
               </div>
-              <span className="p-2 bg-[#00C853]/10 hover:bg-[#00C853]/20 text-[#00C853] rounded-lg border border-[#00C853]/20 transition-all">
+              <span className="p-2 bg-[#15803d]/10 hover:bg-[#15803d]/20 text-[#15803d] rounded-lg border border-[#15803d]/20 transition-all">
                 <Plus className="w-4 h-4" />
               </span>
             </button>
@@ -254,18 +254,18 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
         </div>
 
         {/* Right: AI Sustainability Advisory Logs (7 Columns) */}
-        <div className="lg:col-span-7 bg-[#050816]/40 border border-white/[0.05] p-5 rounded-2xl flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-white border border-[#22c55e]/20 p-5 rounded-2xl flex flex-col justify-between shadow-sm">
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3.5">
-              <h3 className="text-xs font-black text-[#00D4FF] uppercase tracking-widest flex items-center gap-2 font-display">
-                <Sparkles className="w-4 h-4 text-[#00D4FF] animate-pulse" />
+            <div className="flex items-center justify-between border-b border-[#22c55e]/15 pb-3.5">
+              <h3 className="text-xs font-black text-[#15803d] uppercase tracking-widest flex items-center gap-2 font-display">
+                <Sparkles className="w-4 h-4 text-[#15803d] animate-pulse" />
                 AI Sustainability Advisory
               </h3>
 
               <button
                 onClick={() => fetchEcoInsights(activeTab)}
                 disabled={isGenerating}
-                className="text-[10px] bg-[#00D4FF]/10 hover:bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/25 px-3 py-1.5 rounded-full cursor-pointer transition-all font-bold flex items-center gap-1.5"
+                className="text-[10px] bg-[#15803d]/10 hover:bg-[#15803d]/20 text-[#15803d] border border-[#15803d]/25 px-3 py-1.5 rounded-full cursor-pointer transition-all font-bold flex items-center gap-1.5"
               >
                 {isGenerating ? (
                   <>
@@ -281,22 +281,22 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
               </button>
             </div>
 
-            {/* Markdown Display */}
-            <div className="text-xs text-slate-300 leading-relaxed space-y-2.5 max-h-[190px] overflow-y-auto pr-1">
+            {/* Advisory Content Display */}
+            <div className="text-xs text-slate-600 leading-relaxed space-y-2.5 max-h-[190px] overflow-y-auto pr-1">
               {aiInsights ? (
                 <div className="space-y-3">
                   {aiInsights.split("\n").map((line, idx) => {
                     if (line.startsWith("###")) {
-                      return <h4 key={idx} className="text-xs font-black text-white mt-4 mb-1 uppercase tracking-wider font-display">{line.replace("###", "")}</h4>;
+                      return <h4 key={idx} className="text-xs font-black text-slate-800 mt-4 mb-1 uppercase tracking-wider font-display">{line.replace("###", "")}</h4>;
                     }
                     if (line.startsWith("##")) {
-                      return <h3 key={idx} className="text-xs font-black text-[#00D4FF] mt-5 border-b border-white/[0.06] pb-1.5 font-display">{line.replace("##", "")}</h3>;
+                      return <h3 key={idx} className="text-xs font-black text-[#15803d] mt-5 border-b border-[#22c55e]/15 pb-1.5 font-display">{line.replace("##", "")}</h3>;
                     }
                     if (line.startsWith("-") || line.startsWith("*")) {
                       return (
                         <div key={idx} className="flex gap-2 pl-2">
-                          <span className="text-[#00C853]">•</span>
-                          <p className="text-slate-300">{line.substring(1).trim()}</p>
+                          <span className="text-emerald-600">•</span>
+                          <p className="text-slate-600">{line.substring(1).trim()}</p>
                         </div>
                       );
                     }
@@ -304,7 +304,7 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
                     return (
                       <p key={idx} className={idx > 0 ? "mt-2" : ""}>
                         {parts.map((part, pIdx) => {
-                          if (pIdx % 2 === 1) return <strong key={pIdx} className="font-extrabold text-white">{part}</strong>;
+                          if (pIdx % 2 === 1) return <strong key={pIdx} className="font-extrabold text-[#15803d]">{part}</strong>;
                           return part;
                         })}
                       </p>
@@ -313,8 +313,8 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
                 </div>
               ) : (
                 <div className="text-center py-10 flex flex-col items-center justify-center">
-                  <Leaf className="w-8 h-8 text-slate-700 animate-pulse mb-3" />
-                  <p className="font-bold text-slate-300 uppercase tracking-wide text-xs">Advisor Inactive</p>
+                  <Leaf className="w-8 h-8 text-slate-300 animate-pulse mb-3" />
+                  <p className="font-bold text-slate-700 uppercase tracking-wide text-xs">Advisor Inactive</p>
                   <p className="text-[10px] text-slate-500 max-w-xs mt-1 leading-relaxed">
                     Select a focus area tab (General, Energy, Water, Waste) and click **"Consult Advisor"** to query Gemini AI model for real-time venue carbon offsets.
                   </p>
@@ -324,12 +324,12 @@ export const SustainabilityMetrics: React.FC<SustainabilityMetricsProps> = ({
           </div>
 
           {/* Eco Scorecard banner */}
-          <div className="border-t border-white/[0.05] pt-4 mt-4 text-[10px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono font-bold">
-            <span className="flex items-center gap-1.5 bg-[#00C853]/5 border border-[#00C853]/15 py-1 px-3.5 rounded-full text-[#00C853]">
-              <Award className="w-4 h-4 text-[#FFD54F]" />
+          <div className="border-t border-[#22c55e]/15 pt-4 mt-4 text-[10px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono font-bold">
+            <span className="flex items-center gap-1.5 bg-[#f0f7f4] border border-[#22c55e]/25 py-1 px-3.5 rounded-full text-[#15803d]">
+              <Award className="w-4 h-4 text-amber-500" />
               FIFA 2026 Stadium Eco Score: <strong>88/100 (Silver Star Award)</strong>
             </span>
-            <span className="flex items-center gap-1.5 text-slate-400">
+            <span className="flex items-center gap-1.5 text-slate-500">
               <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> Carbon Offset Neutral Target
             </span>
           </div>

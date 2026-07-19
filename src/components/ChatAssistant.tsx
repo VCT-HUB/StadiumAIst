@@ -55,7 +55,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
     {
       id: "welcome",
       role: "model",
-      text: "Hello! I am **StadiumAIst**, your real-time stadium assistant for the **FIFA World Cup 2026**. I have live operational feeds on concessions, gate lines, safety alerts, and green statistics. How can I assist you today?",
+      text: "Hello! I am **StadiumAIst**, your real-time venue copilot for the **FIFA World Cup 2026**. I have live operational feeds on concessions, gate lines, safety alerts, and green statistics. How can I assist you today?",
       timestamp: new Date().toISOString(),
     },
   ]);
@@ -65,11 +65,13 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
   const [isListening, setIsListening] = useState(false);
   const [listeningTimer, setListeningTimer] = useState<NodeJS.Timeout | null>(null);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll to bottom when new messages arrive
+  // Auto scroll container only, preventing full page scroll jumping on refresh or update
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
 
   const handleSendMessage = async (text: string) => {
@@ -153,40 +155,40 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
   const suggestions = currentRole === StaffRole.FAN ? FAN_SUGGESTIONS : STAFF_SUGGESTIONS;
 
   return (
-    <div id="ai-assistant-card" className="glass-panel-glow flex flex-col h-[540px] overflow-hidden relative">
-      {/* Top neon indicator glow line */}
-      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#005CFF] via-[#00D4FF] to-[#6C4DFF]" />
+    <div id="ai-assistant-card" className="bg-white border border-[#22c55e]/20 flex flex-col h-[540px] overflow-hidden relative rounded-[24px] shadow-[0_8px_30px_rgba(21,128,61,0.03)]">
+      {/* Top green indicator glow line */}
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#15803d] to-[#22c55e]" />
       
       {/* Card Header */}
-      <div className="px-5 py-4 bg-[#0B1228]/80 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+      <div className="px-5 py-4 bg-[#f0f7f4] border-b border-[#22c55e]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
         <div className="flex items-center gap-3">
           {/* Floating Neon AI Icon container */}
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#005CFF] to-[#6C4DFF] flex items-center justify-center border border-white/20 shadow-[0_0_15px_rgba(0,212,255,0.35)] relative group overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#15803d] to-[#22c55e] flex items-center justify-center border border-white/20 shadow-[0_4px_12px_rgba(21,128,61,0.2)] relative group overflow-hidden">
             <Bot className="w-5 h-5 text-white relative z-10 animate-pulse" />
-            <div className="absolute inset-0 bg-[#00D4FF]/25 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-xl" />
+            <div className="absolute inset-0 bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-xl" />
           </div>
           <div>
-            <h3 className="text-sm font-extrabold text-white flex items-center gap-1.5 font-display uppercase tracking-wider">
+            <h3 className="text-sm font-extrabold text-slate-800 flex items-center gap-1.5 font-display uppercase tracking-wider">
               Gemini Stadium Copilot
-              <Sparkles className="w-3.5 h-3.5 text-[#00D4FF] fill-[#00D4FF]/20" />
+              <Sparkles className="w-3.5 h-3.5 text-[#15803d] fill-[#15803d]/20" />
             </h3>
-            <span className="text-[10px] text-[#00C853] flex items-center gap-1 mt-0.5 font-semibold">
-              <span className="w-1.5 h-1.5 bg-[#00C853] rounded-full animate-ping" />
-              ON-LINE // V4 CORIDORS ACTIVE
+            <span className="text-[10px] text-[#15803d] flex items-center gap-1 mt-0.5 font-semibold">
+              <span className="w-1.5 h-1.5 bg-[#15803d] rounded-full animate-ping" />
+              ON-LINE // V4 CORRIDORS ACTIVE
             </span>
           </div>
         </div>
 
         {/* Language dropdown */}
-        <div className="flex items-center gap-2 bg-[#050816]/60 px-3 py-1.5 rounded-full border border-white/[0.06]">
+        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-[#22c55e]/20">
           <Globe className="w-3.5 h-3.5 text-slate-400" />
           <select
             value={preferredLang}
             onChange={(e) => setPreferredLang(e.target.value)}
-            className="bg-transparent border-none text-slate-200 text-xs focus:outline-none cursor-pointer pr-1"
+            className="bg-transparent border-none text-slate-700 text-xs focus:outline-none cursor-pointer pr-1"
           >
             {PRESET_LANGUAGES.map((lang) => (
-              <option key={lang.code} value={lang.code} className="bg-[#0B1228] text-slate-200">
+              <option key={lang.code} value={lang.code} className="bg-[#f0f7f4] text-slate-800">
                 {lang.flag} {lang.label}
               </option>
             ))}
@@ -195,7 +197,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
       </div>
 
       {/* Messages Stream Container */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-[#050816]/45 pitch-lines-overlay">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50/70 pitch-lines-overlay">
         <AnimatePresence initial={false}>
           {messages.map((msg) => {
             const isBot = msg.role === "model";
@@ -211,8 +213,8 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
                 {/* Profile Bubble */}
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border transition-all ${
                   isBot 
-                    ? "bg-[#121932] border-white/[0.08] text-[#00D4FF] shadow-[0_0_8px_rgba(0,212,255,0.15)]" 
-                    : "bg-gradient-to-tr from-[#005CFF] to-[#6C4DFF] border-white/15 text-white"
+                    ? "bg-[#f0f7f4] border-[#22c55e]/25 text-[#15803d] shadow-sm" 
+                    : "bg-gradient-to-tr from-[#15803d] to-[#22c55e] border-white/15 text-white shadow-sm"
                 }`}>
                   {isBot ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
                 </div>
@@ -221,8 +223,8 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
                 <div className="space-y-1">
                   <div className={`rounded-2xl p-3.5 text-xs leading-relaxed border ${
                     isBot 
-                      ? "bg-[#121932]/90 border-white/[0.06] text-slate-200" 
-                      : "bg-[#6C4DFF]/90 border-white/[0.08] text-white font-medium shadow-lg shadow-[#6C4DFF]/15"
+                      ? "bg-white border-[#22c55e]/20 text-slate-700 shadow-sm" 
+                      : "bg-[#15803d] border-[#15803d] text-white font-medium shadow-sm"
                   }`}>
                     {/* Simplistic Markdown Support (bolding and spacing) */}
                     {msg.text.split("\n").map((line, idx) => {
@@ -231,7 +233,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
                         <p key={idx} className={idx > 0 ? "mt-2" : ""}>
                           {parts.map((part, pIdx) => {
                             if (pIdx % 2 === 1) {
-                              return <strong key={pIdx} className="font-extrabold text-[#00D4FF] glow-text-ai">{part}</strong>;
+                              return <strong key={pIdx} className={`font-extrabold ${isBot ? "text-[#15803d]" : "text-emerald-200"}`}>{part}</strong>;
                             }
                             return part;
                           })}
@@ -239,7 +241,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
                       );
                     })}
                   </div>
-                  <span className={`text-[9px] text-slate-500 font-bold font-mono block px-1 ${isBot ? "" : "text-right"}`}>
+                  <span className={`text-[9px] text-slate-400 font-bold font-mono block px-1 ${isBot ? "" : "text-right"}`}>
                     {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
@@ -251,12 +253,12 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
         {/* Thinking / Loading indicator */}
         {isLoading && (
           <div className="flex gap-3 max-w-[80%]">
-            <div className="w-8 h-8 rounded-xl bg-[#121932] border border-white/[0.08] text-[#00D4FF] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(0,212,255,0.15)]">
+            <div className="w-8 h-8 rounded-xl bg-[#f0f7f4] border border-[#22c55e]/25 text-[#15803d] flex items-center justify-center shrink-0 shadow-sm animate-pulse">
               <Loader2 className="w-4 h-4 animate-spin" />
             </div>
-            <div className="bg-[#121932]/75 border border-white/[0.06] rounded-2xl p-3.5 text-xs text-slate-400 italic flex items-center gap-2.5">
-              <Activity className="w-3.5 h-3.5 text-[#00D4FF] animate-pulse" />
-              <span>StadiumAIst is scanning crowd telemetry sensors...</span>
+            <div className="bg-white border border-[#22c55e]/15 rounded-2xl p-3.5 text-xs text-slate-500 italic flex items-center gap-2.5 shadow-sm">
+              <Activity className="w-3.5 h-3.5 text-[#15803d] animate-pulse" />
+              <span>Scanning tactical sensor feeds...</span>
             </div>
           </div>
         )}
@@ -264,12 +266,12 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
         {/* Voice Listening Waveform Panel */}
         {isListening && (
           <div className="flex gap-3 max-w-[80%]">
-            <div className="w-8 h-8 rounded-xl bg-rose-950/80 border border-rose-500/20 text-[#FF3B5C] flex items-center justify-center shrink-0 animate-pulse">
+            <div className="w-8 h-8 rounded-xl bg-red-50 border border-red-500/20 text-red-600 flex items-center justify-center shrink-0 animate-pulse">
               <Mic className="w-4 h-4" />
             </div>
-            <div className="bg-rose-950/40 border border-rose-500/20 rounded-2xl p-3.5 text-xs text-rose-200 flex flex-col gap-2 w-full">
+            <div className="bg-red-50/50 border border-red-500/10 rounded-2xl p-3.5 text-xs text-red-800 flex flex-col gap-2 w-full shadow-sm">
               <span className="font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 bg-[#FF3B5C] rounded-full animate-ping" />
+                <span className="w-1.5 h-1.5 bg-red-600 rounded-full animate-ping" />
                 Listening to voice prompts...
               </span>
               {/* Pulsing soundwave animation spikes */}
@@ -277,7 +279,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
                   <span 
                     key={item} 
-                    className="w-[3px] bg-[#FF3B5C] rounded-full animate-bounce" 
+                    className="w-[3px] bg-red-500 rounded-full animate-bounce" 
                     style={{ 
                       height: `${Math.random() * 100}%`,
                       animationDuration: `${0.4 + Math.random() * 0.4}s` 
@@ -289,26 +291,25 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
           </div>
         )}
 
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Suggestion Pills */}
-      <div className="px-5 py-3 bg-[#050816]/80 border-t border-white/[0.05] overflow-x-auto whitespace-nowrap scrollbar-none flex gap-2 relative z-10">
+      <div className="px-5 py-3 bg-white border-t border-[#22c55e]/15 overflow-x-auto whitespace-nowrap scrollbar-none flex gap-2 relative z-10">
         {suggestions.map((sug, i) => (
           <button
             key={i}
             onClick={() => handleSendMessage(sug)}
             disabled={isLoading || isListening}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#121932] border border-white/[0.08] hover:border-[#00D4FF]/40 text-slate-300 hover:text-white text-[11px] font-semibold rounded-full transition-all cursor-pointer shrink-0 disabled:opacity-50 disabled:pointer-events-none hover:scale-[1.03] active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#f0f7f4] border border-[#22c55e]/20 hover:border-[#15803d]/40 text-slate-600 hover:text-slate-800 text-[11px] font-semibold rounded-full transition-all cursor-pointer shrink-0 disabled:opacity-50 disabled:pointer-events-none hover:scale-[1.03] active:scale-[0.98]"
           >
             {sug}
-            <ArrowRight className="w-3 h-3 text-[#00D4FF]" />
+            <ArrowRight className="w-3 h-3 text-[#15803d]" />
           </button>
         ))}
       </div>
 
       {/* Chat Input & Voice/Mic Controls */}
-      <div className="p-4 bg-[#0B1228]/95 border-t border-white/[0.06] relative z-10">
+      <div className="p-4 bg-[#f0f7f4]/60 border-t border-[#22c55e]/15 relative z-10">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -322,31 +323,39 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentRole, selec
             onClick={handleVoiceButtonClick}
             className={`p-3 rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
               isListening
-                ? "bg-rose-500 text-white border-rose-400 shadow-[0_0_15px_rgba(255,59,92,0.4)]"
-                : "bg-[#121932] hover:bg-[#121932]/85 text-[#00D4FF] border-white/[0.06] hover:border-[#00D4FF]/30"
+                ? "bg-red-600 text-white border-red-400 shadow-[0_0_15px_rgba(220,38,38,0.2)]"
+                : "bg-white hover:bg-slate-50 text-[#15803d] border-[#22c55e]/20 hover:border-[#15803d]/30"
             }`}
             title="Start voice command"
           >
             {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
           </button>
 
-          <input
-            type="text"
+          <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             disabled={isLoading || isListening}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (inputText.trim()) {
+                  handleSendMessage(inputText);
+                }
+              }
+            }}
             placeholder={
               selectedZoneName 
                 ? `Ask AI about ${selectedZoneName} queue state...` 
                 : "Ask about restroom queues, gate flows, or green actions..."
             }
-            className="flex-1 bg-[#050816] border border-white/[0.08] rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#00D4FF] focus:ring-1 focus:ring-[#00D4FF] disabled:opacity-50"
+            rows={2}
+            className="flex-1 bg-white border border-[#22c55e]/25 rounded-xl px-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#15803d] focus:ring-1 focus:ring-[#15803d] disabled:opacity-50 resize-y min-h-[52px] max-h-[120px] overflow-y-auto leading-relaxed"
           />
           
           <button
             type="submit"
             disabled={!inputText.trim() || isLoading || isListening}
-            className="p-3 bg-gradient-to-r from-[#005CFF] to-[#6C4DFF] hover:opacity-90 text-white rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0 shadow-lg shadow-[#005CFF]/20 disabled:opacity-30 disabled:pointer-events-none hover:scale-[1.04] active:scale-[0.96]"
+            className="p-3 bg-gradient-to-r from-[#15803d] to-[#22c55e] hover:opacity-95 text-white rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0 shadow-sm disabled:opacity-30 disabled:pointer-events-none hover:scale-[1.04] active:scale-[0.96]"
           >
             <Send className="w-4 h-4" />
           </button>

@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-bg: #050816;
-  --color-secondary-bg: #0B1228;
-  --color-card-bg: rgba(18, 25, 50, 0.75);
-  --color-border-glass: rgba(255, 255, 255, 0.08);
+  --color-primary-bg: #f0f7f4;
+  --color-secondary-bg: #ffffff;
+  --color-card-bg: rgba(255, 255, 255, 0.95);
+  --color-border-glass: rgba(34, 197, 94, 0.18);
   
-  --color-fifa-blue: #005CFF;
-  --color-fifa-purple: #6C4DFF;
-  --color-ai-cyan: #00D4FF;
-  --color-success-green: #00C853;
-  --color-warn-gold: #FFC107;
-  --color-crit-red: #FF3B5C;
-  --color-gold-accent: #FFD54F;
+  --color-fifa-blue: #15803d;
+  --color-fifa-purple: #16a34a;
+  --color-ai-cyan: #22c55e;
+  --color-success-green: #15803d;
+  --color-warn-gold: #b45309;
+  --color-crit-red: #dc2626;
+  --color-gold-accent: #d97706;
   
   --font-sans: "Inter", system-ui, sans-serif;
   --font-display: "Outfit", "Space Grotesk", sans-serif;
@@ -25,12 +25,12 @@
 
   @keyframes pulse-glow {
     0%, 100% {
-      opacity: 0.6;
+      opacity: 0.8;
       filter: drop-shadow(0 0 4px var(--color-fifa-blue)) blur(1px);
     }
     50% {
       opacity: 1;
-      filter: drop-shadow(0 0 15px var(--color-fifa-purple)) blur(0px);
+      filter: drop-shadow(0 0 12px var(--color-ai-cyan)) blur(0px);
     }
   }
   @keyframes spin-slow {
@@ -46,7 +46,7 @@
       transform: translateY(0px) rotate(0deg);
     }
     50% {
-      transform: translateY(-10px) rotate(2deg);
+      transform: translateY(-8px) rotate(1deg);
     }
   }
   @keyframes aurora {
@@ -67,22 +67,22 @@
   }
 }
 
-/* Glassmorphism utility classes */
+/* Glassmorphism utility classes styled for sport crisp look */
 .glass-panel {
-  background: rgba(11, 18, 40, 0.55);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.12);
   border-radius: 24px;
 }
 
 .glass-panel-glow {
-  background: rgba(18, 25, 50, 0.75);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 92, 255, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  box-shadow: 0 15px 40px -10px rgba(15, 23, 42, 0.15), 0 0 20px rgba(34, 197, 94, 0.05);
   border-radius: 24px;
 }
 
@@ -91,82 +91,82 @@
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .premium-card-hover:hover {
-  transform: translateY(-6px);
-  border-color: rgba(0, 212, 255, 0.3);
-  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 212, 255, 0.15);
+  transform: translateY(-5px);
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.18), 0 0 25px rgba(34, 197, 94, 0.1);
 }
 
-/* Animated Pitch lines overlay */
+/* Animated Pitch lines overlay for Football Tactics Board */
 .pitch-lines-overlay {
   background-image: 
-    radial-gradient(circle at 50% 50%, transparent 120px, rgba(255, 255, 255, 0.02) 121px, rgba(255, 255, 255, 0.02) 122px, transparent 123px),
-    linear-gradient(to right, transparent 49.8%, rgba(255, 255, 255, 0.02) 49.9%, rgba(255, 255, 255, 0.02) 50.1%, transparent 50.2%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    radial-gradient(circle at 50% 50%, transparent 120px, rgba(34, 197, 94, 0.03) 121px, rgba(34, 197, 94, 0.03) 122px, transparent 123px),
+    linear-gradient(to right, transparent 49.8%, rgba(34, 197, 94, 0.03) 49.9%, rgba(34, 197, 94, 0.03) 50.1%, transparent 50.2%),
+    linear-gradient(to bottom, rgba(34, 197, 94, 0.02) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 40px 40px;
 }
 
 /* Glowing text effects */
 .glow-text-ai {
-  text-shadow: 0 0 10px rgba(0, 214, 255, 0.5), 0 0 2px rgba(0, 214, 255, 0.8);
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
 }
 
 .glow-text-fifa {
-  text-shadow: 0 0 15px rgba(108, 77, 255, 0.6), 0 0 2px rgba(0, 92, 255, 0.8);
+  text-shadow: 0 0 15px rgba(21, 128, 61, 0.3);
 }
 
 /* Pulse animation helper for emergency map/alerts */
 .pulse-ring {
-  box-shadow: 0 0 0 0 rgba(255, 59, 92, 0.7);
+  box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
   animation: pulse-ring-anim 1.5s cubic-bezier(0.24, 0, 0, 1) infinite;
 }
 
 @keyframes pulse-ring-anim {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 59, 92, 0.7);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(255, 59, 92, 0);
+    box-shadow: 0 0 0 12px rgba(220, 38, 38, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 59, 92, 0);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
   }
 }
 
 .pulse-ring-amber {
-  box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+  box-shadow: 0 0 0 0 rgba(180, 83, 9, 0.7);
   animation: pulse-ring-amber-anim 1.5s cubic-bezier(0.24, 0, 0, 1) infinite;
 }
 
 @keyframes pulse-ring-amber-anim {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    box-shadow: 0 0 0 0 rgba(180, 83, 9, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(255, 193, 7, 0);
+    box-shadow: 0 0 0 12px rgba(180, 83, 9, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    box-shadow: 0 0 0 0 rgba(180, 83, 9, 0);
   }
 }
 
 .pulse-ring-emerald {
-  box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+  box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.7);
   animation: pulse-ring-emerald-anim 1.5s cubic-bezier(0.24, 0, 0, 1) infinite;
 }
 
 @keyframes pulse-ring-emerald-anim {
   0% {
-    box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+    box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(0, 200, 83, 0);
+    box-shadow: 0 0 0 12px rgba(21, 128, 61, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+    box-shadow: 0 0 0 0 rgba(21, 128, 61, 0);
   }
 }
 
 /* Wave dynamic animation for bars */
 .bar-chart-glow {
-  filter: drop-shadow(0 0 8px rgba(108, 77, 255, 0.3));
+  filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.25));
 }
