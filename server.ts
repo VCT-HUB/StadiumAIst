@@ -370,6 +370,11 @@ function stadiumMetricsValue(category: string): number {
 // STATIC ASSETS AND SPA HANDLING
 // ==========================================
 async function startServer() {
+  if (process.env.VERCEL) {
+    // On Vercel, the CDN handles static files, and the app is run as a serverless function.
+    return;
+  }
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -390,3 +395,5 @@ async function startServer() {
 }
 
 startServer();
+
+export default app;
